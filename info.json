@@ -5,8 +5,8 @@
 	"title": "Auto diplomacy (on damage)[Switchable mod]",
 	"author": "ZwerOxotnik",
 	"contact": "zweroxotnik@gmail.com, Discord:ZwerOxotnik#7117",
-	"homepage": "",
-	"description": "See locale/*",
+	"homepage": "https://www.reddit.com/r/ZwerOxotnik/",
+	"description": "Changes diplomacy as someone damages another force (ignores walls and gates)",
 	"dependencies": [
 		"? switchable_mods"
 	]
