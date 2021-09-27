@@ -1,12 +1,12 @@
 {
 	"name": "ODAD",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"factorio_version": "1.1",
 	"title": "Auto diplomacy (on damage)[Switchable mod]",
 	"author": "ZwerOxotnik",
 	"contact": "zweroxotnik@gmail.com, Discord:ZwerOxotnik#7117",
 	"homepage": "https://www.reddit.com/r/ZwerOxotnik/",
-	"description": "Changes diplomacy as someone damages another force (ignores walls and gates)",
+	"description": "See locale/*",
 	"dependencies": [
 		"? switchable_mods"
 	]

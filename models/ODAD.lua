@@ -124,7 +124,14 @@ local function set_filters()
 	script.set_event_filter(defines.events.on_entity_damaged, {
 		{filter = "final-damage-amount", comparison = ">", value = 1, mode = "and"},
 		{filter = "type", type = "wall", invert = true, mode = "and"},
-		{filter = "type", type = "gate", invert = true, mode = "and"}
+		{filter = "type", type = "gate", invert = true, mode = "and"},
+		{filter = "type", type = "character", invert = true, mode = "and"},
+		{filter = "type", type = "tree", invert = true, mode = "and"},
+		{filter = "type", type = "unit", invert = true, mode = "and"},
+		{filter = "type", type = "simple-entity", invert = true, mode = "and"},
+		{filter = "damage-type", type = "fire", invert = true, mode = "and"},
+		{filter = "damage-type", type = "acid", invert = true, mode = "and"},
+		{filter = "damage-type", type = "physical", invert = true, mode = "and"}
 	})
 end
 
@@ -136,8 +143,8 @@ end
 
 M.on_init = set_filters
 M.on_load = set_filters
--- M.on_mod_enabled = set_filters
--- M.on_mod_disabled = set_filters
+M.on_mod_enabled = set_filters
+M.on_mod_disabled = set_filters
 M.add_remote_interface = add_remote_interface
 
 --#endregion
