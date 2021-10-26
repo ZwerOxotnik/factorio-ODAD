@@ -4,7 +4,6 @@ local M = {}
 
 --#region Constatns
 local random = math.random
-local match = string.match
 --#endregion
 
 
@@ -17,7 +16,6 @@ local chance = settings.global["ODAD_chance"].value
 --#region Utils
 
 local function check_stance_on_entity_damaged(event)
-	-- Validation of data
 	local entity = event.entity
 	local force = entity.force
 	local killing_force = event.force
@@ -97,9 +95,6 @@ local mod_settings = {
 	end
 }
 local function on_runtime_mod_setting_changed(event)
-	-- if event.setting_type ~= "runtime-global" then return end
-	if not match(event.setting, "^ODAD_") then return end
-
 	local f = mod_settings[event.setting]
 	if f then f(settings.global[event.setting].value) end
 end
