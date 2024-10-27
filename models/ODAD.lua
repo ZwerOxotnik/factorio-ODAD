@@ -8,8 +8,8 @@ local random = math.random
 
 
 --#region Settings
-local threshold_entity_HP = settings.global["ODAD_threshold_entity_HP"].value
-local chance = settings.global["ODAD_chance"].value
+local __threshold_entity_HP = settings.global["ODAD_threshold_entity_HP"].value
+local __chance = settings.global["ODAD_chance"].value
 --#endregion
 
 
@@ -22,7 +22,7 @@ local function check_stance_on_entity_damaged(event)
 	if not force.get_cease_fire(killing_force) or killing_force == force then return end
 
 	-- Find in list the teams
-	-- local teams = global.diplomacy.teams
+	-- local teams = storage.diplomacy.teams
 	-- if teams then
 	-- 	local found_1st = false
 	-- 	local found_2nd = false
@@ -38,60 +38,60 @@ local function check_stance_on_entity_damaged(event)
 
 	-- Change policy between teams and print information
 	local cause = event.cause
-	if cause and cause.valid then
-		if game.entity_prototypes[entity.name].max_health >= threshold_entity_HP then --entity.type == "rocket-silo"
-			if force.get_cease_fire(killing_force) then
-				force.set_friend(killing_force, true)
-				force.set_cease_fire(killing_force, true)
-				killing_force.set_friend(force, true)
-				killing_force.set_cease_fire(force, true)
-				game.print({"team-changed-diplomacy", killing_force.name, force.name, {"enemy"}})
-				if cause.type == "character" then
-					killing_force.print({"player-changed-diplomacy", cause.player.name, force.name})
-					force.print({"player-changed-diplomacy", cause.player.name, killing_force.name})
-				elseif cause.type == "car" then
-					local passenger = cause.get_passenger()
-					local driver = cause.get_driver()
-					if passenger and driver then
-						killing_force.print({"player-changed-diplomacy", driver.player.name .. " & " .. passenger.player.name, force.name})
-						force.print({"player-changed-diplomacy", driver.player.name .. " & " .. passenger.player.name, killing_force.name})
-					elseif passenger then
-						killing_force.print({"player-changed-diplomacy", passenger.player.name, force.name})
-						force.print({"player-changed-diplomacy", passenger.player.name, killing_force.name})
-					elseif driver then
-						killing_force.print({"player-changed-diplomacy", driver.player.name, force.name})
-						force.print({"player-changed-diplomacy", driver.player.name, killing_force.name})
-					else
-						killing_force.print({"player-changed-diplomacy", cause.localised_name, force.name})
-						force.print({"player-changed-diplomacy", cause.localised_name, killing_force.name})
-					end
-				else
-					killing_force.print({"player-changed-diplomacy", cause.localised_name, force.name})
-					force.print({"player-changed-diplomacy", cause.localised_name, killing_force.name})
-				end
-			end
+	if not (cause and cause.valid) then
+
+		if prototypes.entity[entity.name].max_health < __threshold_entity_HP then return end --entity.type == "rocket-silo"
+		if not force.get_cease_fire(killing_force) then return end
+
+		force.set_friend(killing_force, true)
+		force.set_cease_fire(killing_force, true)
+		killing_force.set_friend(force, true)
+		killing_force.set_cease_fire(force, true)
+		game.print({"team-changed-diplomacy", killing_force.name, force.name, {"enemy"}})
+		killing_force.print({"player-changed-diplomacy", "ANY", force.name})
+		force.print({"player-changed-diplomacy", "ANY", killing_force.name})
+		return
+	end
+
+	if (prototypes.entity[entity.name].max_health < __threshold_entity_HP) then return end --entity.type == "rocket-silo"
+	if not force.get_cease_fire(killing_force) then return end
+
+	force.set_friend(killing_force, true)
+	force.set_cease_fire(killing_force, true)
+	killing_force.set_friend(force, true)
+	killing_force.set_cease_fire(force, true)
+	game.print({"team-changed-diplomacy", killing_force.name, force.name, {"enemy"}})
+	if cause.type == "character" then
+		killing_force.print({"player-changed-diplomacy", cause.player.name, force.name})
+		force.print({"player-changed-diplomacy", cause.player.name, killing_force.name})
+	elseif cause.type == "car" then
+		local passenger = cause.get_passenger()
+		local driver = cause.get_driver()
+		if passenger and driver then
+			killing_force.print({"player-changed-diplomacy", driver.player.name .. " & " .. passenger.player.name, force.name})
+			force.print({"player-changed-diplomacy", driver.player.name .. " & " .. passenger.player.name, killing_force.name})
+		elseif passenger then
+			killing_force.print({"player-changed-diplomacy", passenger.player.name, force.name})
+			force.print({"player-changed-diplomacy", passenger.player.name, killing_force.name})
+		elseif driver then
+			killing_force.print({"player-changed-diplomacy", driver.player.name, force.name})
+			force.print({"player-changed-diplomacy", driver.player.name, killing_force.name})
+		else
+			killing_force.print({"player-changed-diplomacy", cause.localised_name, force.name})
+			force.print({"player-changed-diplomacy", cause.localised_name, killing_force.name})
 		end
 	else
-		if game.entity_prototypes[entity.name].max_health >= threshold_entity_HP then --entity.type == "rocket-silo"
-			if force.get_cease_fire(killing_force) then
-				force.set_friend(killing_force, true)
-				force.set_cease_fire(killing_force, true)
-				killing_force.set_friend(force, true)
-				killing_force.set_cease_fire(force, true)
-				game.print({"team-changed-diplomacy", killing_force.name, force.name, {"enemy"}})
-				killing_force.print({"player-changed-diplomacy", "ANY", force.name})
-				force.print({"player-changed-diplomacy", "ANY", killing_force.name})
-			end
-		end
+		killing_force.print({"player-changed-diplomacy", cause.localised_name, force.name})
+		force.print({"player-changed-diplomacy", cause.localised_name, killing_force.name})
 	end
 end
 
 local mod_settings = {
 	ODAD_threshold_entity_HP = function(value)
-		threshold_entity_HP = value
+		__threshold_entity_HP = value
 	end,
 	ODAD_chance = function(value)
-		chance = value
+		__chance = value
 	end
 }
 local function on_runtime_mod_setting_changed(event)
@@ -105,7 +105,7 @@ end
 --#region Functions of events
 
 local function on_entity_damaged(event)
-	if random(100) <= chance then
+	if random(100) <= __chance then
 		pcall(check_stance_on_entity_damaged, event)
 	end
 end
